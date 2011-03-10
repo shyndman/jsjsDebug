@@ -1353,9 +1353,12 @@ DJS.ShiftExpression = Class.create( DJS.ExpressionOperationList, {
 			switch( source.peekToken().value ) {
 				case "<<":
 				case ">>":
-				case ">>>":		this.operands.push( source.getToken().value );
-								break;
-				default:		return this.setupParent( this.operands.length == 1 ? this.operands[0] : this );
+				case ">>>":		
+          this.operands.push( source.getToken().value );
+          break;
+          
+				default:		
+				  return this.setupParent( this.operands.length == 1 ? this.operands[0] : this );
 			}
 			
 			operand = new DJS.AdditiveExpression();
@@ -1390,17 +1393,18 @@ DJS.UnaryExpression = Class.create( DJS.Expression, {
 			case "+":
 			case "-":
 			case "~":
-			case "!":			this.operator = source.getToken().value;
+			case "!":	this.operator = source.getToken().value;
 								this.operand = new DJS.UnaryExpression( this );
 								this.operand = this.operand.parse( source );
 								break;
 			case "delete":
-			case "typeof":		this.operator = source.getToken().value;				
+			case "typeof":		
+			          this.operator = source.getToken().value;				
 								this.operand = new DJS.PostfixExpression( this );
 								this.operand = this.operand.parse( source );
 								break;
 								
-			default: 			this.operand = new DJS.PostfixExpression( this );
+			default: 	this.operand = new DJS.PostfixExpression( this );
 								this.operand = this.operand.parse( source );
 								return this.setupParent( this.operand );
 		}
@@ -1436,22 +1440,36 @@ DJS.UnaryExpression = Class.create( DJS.Expression, {
 		
 		if( step == 1 ) {
 			switch( this.operator ) {
-				case "++": 			context.setVariable( state.container, state.name, ++state.value );
-									break;
-				case "--": 			context.setVariable( state.container, state.name, --state.value );
-									break;
-				case "+": 			state.value = +state.value;
-									break;
-				case "-": 			state.value = -state.value;
-									break;
-				case "~": 			state.value = ~state.value;
-									break;
-				case "!":			state.value = !state.value;
-									break;
-				case "delete": 		context.deleteVariable( state.container, state.name );
-									break;
-				case "typeof":		state.value = typeof state.value;
-									break;
+				case "++": 			
+				  context.setVariable( state.container, state.name, ++state.value );
+					break;
+					
+				case "--": 			
+				  context.setVariable( state.container, state.name, --state.value );
+					break;
+									
+				case "+": 
+				  state.value = +state.value;
+					break;
+					
+				case "-": 
+				  state.value = -state.value;
+					break;
+					
+				case "~": 
+				  state.value = ~state.value;
+				  break;
+				  
+				case "!":			
+				  state.value = !state.value;
+          break;
+				case "delete": 		
+				  context.deleteVariable( state.container, state.name );
+					break;
+					
+				case "typeof":		
+				  state.value = typeof state.value;
+					break;
 			}
 			
 			return true;

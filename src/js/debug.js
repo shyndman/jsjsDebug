@@ -137,7 +137,7 @@ DJS.StackFrame = Class.create(DJS.Base, {
 			context = document;
 		}
 		else {
-			throw new DJS.Exception( "evalPath( path ) - this first path part must be _root or _global" );
+			throw new DJS.Exception( "evalPath( path ) - this first path part must be window or document" );
 		}
 		
 		for( var i = 1; i < len; i++ ) {
