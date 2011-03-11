@@ -3,7 +3,7 @@
 //
 
 DJS.StackFrame = Class.create(DJS.Base, {
-  initialize: function( thisPath ) {
+  initialize: function(thisPath) {
     this.thisPath = thisPath;
     this.blockStack = [window, document, null, {'window': window, 'document': document}, {}];
     this.setThisObject(this.evalPath(thisPath));
@@ -24,7 +24,7 @@ DJS.StackFrame = Class.create(DJS.Base, {
   
   // pushing and popping blocks
   push: function(scope) {
-    this.blockStack.push( scope ? scope : {} );
+    this.blockStack.push(scope ? scope : {});
   },
   
   pop: function() {
@@ -43,105 +43,105 @@ DJS.StackFrame = Class.create(DJS.Base, {
     this.variableChanged(target, name, old, value);
   },
   
-  setLocalVariable: function( name, value ) {
+  setLocalVariable: function(name, value) {
     var block = this.blockStack[this.blockStack.length - 1];
     var old = block[name];
     block[name] = value;
-    this.variableChanged( block, name, old, value );
+    this.variableChanged(block, name, old, value);
   },
   
-  deleteVariable: function( target, name ) {
+  deleteVariable: function(target, name) {
     var old = target[name];
     delete target[name];
-    this.variableChanged( target, name, old, undefined );
+    this.variableChanged(target, name, old, undefined);
   },
   
-  getVariable: function( name, getContainer ) {
-    return this.searchStack( name, getContainer );
+  getVariable: function(name, getContainer) {
+    return this.searchStack(name, getContainer);
   },
   
   // RECORDING VARIABLE CHANGES
   
-  variableChanged: function( target, name, oldValue, newValue ) {
-    this.valueChanges.push( { target: target, name: name, oldValue: oldValue, newValue: newValue } );
+  variableChanged: function(target, name, oldValue, newValue) {
+    this.valueChanges.push({ target: target, name: name, oldValue: oldValue, newValue: newValue });
   },
   
   // SETTING THE CURRENTLY EXECUTING NODE
   
-  setTargetNode: function( node ) {
+  setTargetNode: function(node) {
     this.targetNode = node;
   },
   
   // STORING STATE FOR NODES
   
-  addNodeState: function( node, name, value ) {
-    if( !this.stateStore[node.uid()] ) this.stateStore[node.uid()] = {};
-    if( typeof( name ) == "object" ) {
-      Object.extend( this.stateStore[node.uid()], name );
+  addNodeState: function(node, name, value) {
+    if(!this.stateStore[node.uid()]) this.stateStore[node.uid()] = {};
+    if(typeof(name) == "object") {
+      Object.extend(this.stateStore[node.uid()], name);
     } else {
       this.stateStore[node.uid()][name] = value;
     }
   },
   
-  removeNodeState: function( node ) {
+  removeNodeState: function(node) {
     delete this.stateStore[node.uid()];
   },
   
-  hasNodeState: function( node ) {
+  hasNodeState: function(node) {
     return !!this.stateStore[node.uid()];
   },
   
-  getNodeState: function( node ) {
+  getNodeState: function(node) {
     return this.stateStore[node.uid()];
   },
   
   // EXECUTION COMPLETION
   
-  isNodeComplete: function( node ) {
-    return this.hasNodeState( node ) && this.getNodeState( node ).__complete__;
+  isNodeComplete: function(node) {
+    return this.hasNodeState(node) && this.getNodeState(node).__complete__;
   },
   
-  markNodeComplete: function( node ) {
-    this.addNodeState( node, '__complete__', true );
+  markNodeComplete: function(node) {
+    this.addNodeState(node, '__complete__', true);
   },
   
   // SEARCHING THE STACK FOR A VARIABLE
   
-  searchStack: function( name, getContainer ) {
+  searchStack: function(name, getContainer) {
     var len = this.blockStack.length;
-    for( var i = len - 1; i >= 0; i-- ) 
+    for(var i = len - 1; i >= 0; i--) 
     {
       var block = this.blockStack[i];
-      if( block[name] !== undefined ) {
+      if(block[name] !== undefined) {
         return getContainer ? { container: block, name: name, value: block[name] } : block[name];
       }
     }
     
-    error( "could not find " + name );
+    error("could not find " + name);
     return null;
   },
   
   // EVALUATING A STRING PATH
   
-  evalPath: function( path ) {
-    var parts = path.split( '.' );
+  evalPath: function(path) {
+    var parts = path.split('.');
     var len = parts.length;
     var context = null;
     
     // get initial context
     
-    if( parts[0] == "window" ) {
+    if(parts[0] == "window") {
       context = window;
     }
-    else if ( parts[0] == "document" ) {
+    else if (parts[0] == "document") {
       context = document;
     }
     else {
-      throw new DJS.Exception( "evalPath( path ) - this first path part must be window or document" );
+      throw new DJS.Exception("evalPath(path) - this first path part must be window or document");
     }
     
-    for( var i = 1; i < len; i++ ) {
-      context = context[ parts[i] ];
+    for(var i = 1; i < len; i++) {
+      context = context[parts[i]];
     }
     
     return context;

@@ -36,12 +36,12 @@ DJS.TokenConstants = {
     "NAN_LITERAL",
     "INFINITY_LITERAL",
     "EOF",
-    "UNKNOWN" ],
+    "UNKNOWN"],
 };
 DJS.Token = Class.create(DJS.Base, {
     
   // constructs a new token
-  initialize: function( type, value, tokenSourceIndex, charStart, lineCharStart, lineNumber ) {
+  initialize: function(type, value, tokenSourceIndex, charStart, lineCharStart, lineNumber) {
     this.type = type;
     this.tokenSourceIndex = tokenSourceIndex;
     this.lineNumber = lineNumber;
@@ -49,42 +49,53 @@ DJS.Token = Class.create(DJS.Base, {
     this.lineCharStart = lineCharStart;
     
     var t = DJS.Token;
-    switch( type ) {
+    switch(type) {
         case t.RESERVED_WORD: 
         case t.IDENTIFIER:
         case t.OPERATOR:
         case t.PUNCTUATOR:
-        case t.STRING_LITERAL:    this.value = value;
-                      break;
+        case t.STRING_LITERAL:    
+          this.value = value;
+          break;
 
-        case t.FLOAT_LITERAL:   this.value = parseFloat( value );
-                      break;
+        case t.FLOAT_LITERAL:   
+          this.value = parseFloat(value);
+          break;
 
-        case t.INTEGER_LITERAL:   this.value = parseInt( value );
-                      break;
+        case t.INTEGER_LITERAL:   
+          this.value = parseInt(value);
+          break;
 
-        case t.NULL_LITERAL:    this.value = null;
-                      break;
+        case t.NULL_LITERAL:    
+          this.value = null;
+          break;
 
-        case t.BOOLEAN_LITERAL:   this.value = ( value == "true" );
-                      break;
+        case t.BOOLEAN_LITERAL:   
+          this.value = (value == "true");
+          break;
 
-        case t.UNDEFINED_LITERAL: this.value = undefined;
-                      break;
+        case t.UNDEFINED_LITERAL: 
+          this.value = undefined;
+          break;
 
-        case t.NAN_LITERAL:     this.value = NaN;
-                      break;
+        case t.NAN_LITERAL:     
+          this.value = NaN;
+          break;
 
-        case t.INFINITY_LITERAL:  this.value = Infinity;
-                      break;
+        case t.INFINITY_LITERAL:  
+          this.value = Infinity;
+          break;
 
-        case t.EOF:         this.value = "";
-                      break;
+        case t.EOF:         
+          this.value = "";
+          break;
 
-        case t.UNKNOWN:       this.value = null;
-                      break;
+        case t.UNKNOWN:       
+          this.value = null;
+          break;
 
-        default:          throw new { message: "DASToken(): Unknown type '" + type + "'" };
+        default:          
+          throw new { message: "DASToken(): Unknown type '" + type + "'" };
     }
   },
   
@@ -99,7 +110,7 @@ DJS.Token = Class.create(DJS.Base, {
     return this.value + " (type=" + this.typeName() + ", location=(" + this.charStart + "," + this.lineCharStart + "," + this.lineNumber + "))";
   }
 });
-Object.extend( DJS.Token, DJS.TokenConstants );
+Object.extend(DJS.Token, DJS.TokenConstants);
 
 //
 // DJS.Lexer - the lexer is responsible for tokenizing a source string
@@ -113,10 +124,11 @@ DJS.LexerConstants = {
   TYPE_PUNCTUATION: "P",
   TYPE_UNKNOWN: "U"
 };
+
 DJS.Lexer = Class.create(DJS.Base, {
   
   // constructs a new lexer
-  initialize: function( source ) {
+  initialize: function(source) {
     this.source = source;
     this.tokens = [];
     this.charType = [];
@@ -133,170 +145,170 @@ DJS.Lexer = Class.create(DJS.Base, {
     var t = DJS.Token;
     
     this.tokenType = [];
-    this.tokenType[ " break " ]     = t.RESERVED_WORD;
-    this.tokenType[ " else " ]      = t.RESERVED_WORD;
-    this.tokenType[ " new " ]     = t.RESERVED_WORD;
-    this.tokenType[ " var " ]     = t.RESERVED_WORD;
-    this.tokenType[ " case " ]      = t.RESERVED_WORD;
-    this.tokenType[ " finally " ]   = t.RESERVED_WORD;
-    this.tokenType[ " return " ]    = t.RESERVED_WORD;
-    this.tokenType[ " void " ]      = t.RESERVED_WORD;
-    this.tokenType[ " catch " ]     = t.RESERVED_WORD;
-    this.tokenType[ " for " ]     = t.RESERVED_WORD;
-    this.tokenType[ " switch " ]    = t.RESERVED_WORD;
-    this.tokenType[ " while " ]     = t.RESERVED_WORD;
-    this.tokenType[ " continue " ]    = t.RESERVED_WORD;
-    this.tokenType[ " function " ]    = t.RESERVED_WORD;
-    this.tokenType[ " this " ]      = t.RESERVED_WORD;
-    this.tokenType[ " with " ]      = t.RESERVED_WORD;
-    this.tokenType[ " default " ]   = t.RESERVED_WORD;
-    this.tokenType[ " if " ]      = t.RESERVED_WORD;
-    this.tokenType[ " throw " ]     = t.RESERVED_WORD;
-    this.tokenType[ " delete " ]    = t.RESERVED_WORD;
-    this.tokenType[ " in " ]      = t.RESERVED_WORD;
-    this.tokenType[ " try " ]     = t.RESERVED_WORD;
-    this.tokenType[ " do " ]      = t.RESERVED_WORD;
-    this.tokenType[ " instanceof " ]  = t.RESERVED_WORD;
-    this.tokenType[ " typeof " ]    = t.RESERVED_WORD;
-    this.tokenType[ " abstract " ]    = t.RESERVED_WORD;
-    this.tokenType[ " enum " ]      = t.RESERVED_WORD;
-    this.tokenType[ " int " ]     = t.RESERVED_WORD;
-    this.tokenType[ " short " ]     = t.RESERVED_WORD;
-    this.tokenType[ " boolean " ]   = t.RESERVED_WORD;
-    this.tokenType[ " export " ]    = t.RESERVED_WORD;
-    this.tokenType[ " interface " ]   = t.RESERVED_WORD;
-    this.tokenType[ " static " ]    = t.RESERVED_WORD;
-    this.tokenType[ " byte " ]      = t.RESERVED_WORD;
-    this.tokenType[ " extends " ]   = t.RESERVED_WORD;
-    this.tokenType[ " long " ]      = t.RESERVED_WORD;
-    this.tokenType[ " super " ]     = t.RESERVED_WORD;
-    this.tokenType[ " char " ]      = t.RESERVED_WORD;
-    this.tokenType[ " final " ]     = t.RESERVED_WORD;
-    this.tokenType[ " native " ]    = t.RESERVED_WORD;
-    this.tokenType[ " synchronized " ]  = t.RESERVED_WORD;
-    this.tokenType[ " class " ]     = t.RESERVED_WORD;
-    this.tokenType[ " float " ]     = t.RESERVED_WORD;
-    this.tokenType[ " package " ]   = t.RESERVED_WORD;
-    this.tokenType[ " throws " ]    = t.RESERVED_WORD;
-    this.tokenType[ " const " ]     = t.RESERVED_WORD;
-    this.tokenType[ " goto " ]      = t.RESERVED_WORD;
-    this.tokenType[ " private " ]   = t.RESERVED_WORD;
-    this.tokenType[ " transient " ]   = t.RESERVED_WORD;
-    this.tokenType[ " debugger " ]= t.RESERVED_WORD;
-    this.tokenType[ " implements " ]= t.RESERVED_WORD;
-    this.tokenType[ " protected " ] = t.RESERVED_WORD;
-    this.tokenType[ " volatile " ]= t.RESERVED_WORD;
-    this.tokenType[ " double " ]  = t.RESERVED_WORD;
-    this.tokenType[ " import " ]  = t.RESERVED_WORD;
-    this.tokenType[ " public " ]  = t.RESERVED_WORD;
-    this.tokenType[ " null " ]    = t.NULL_LITERAL;
-    this.tokenType[ " undefined " ] = t.UNDEFINED_LITERAL;
-    this.tokenType[ " true " ]    = t.BOOLEAN_LITERAL;
-    this.tokenType[ " false " ]   = t.BOOLEAN_LITERAL;
-    this.tokenType[ " NaN " ]     = t.NAN_LITERAL;
-    this.tokenType[ " Infinity " ]= t.INFINITY_LITERAL;
-    this.tokenType[ " { " ]       = t.PUNCTUATOR;
-    this.tokenType[ " } " ]       = t.PUNCTUATOR;
-    this.tokenType[ " ( " ]       = t.PUNCTUATOR;
-    this.tokenType[ " ) " ]       = t.PUNCTUATOR;
-    this.tokenType[ " [ " ]       = t.PUNCTUATOR;
-    this.tokenType[ " ] " ]       = t.PUNCTUATOR;
-    this.tokenType[ " ; " ]       = t.PUNCTUATOR;
-    this.tokenType[ " . " ]       = t.PUNCTUATOR;
-    this.tokenType[ " , " ]       = t.PUNCTUATOR;
-    this.tokenType[ " < " ]       = t.OPERATOR;
-    this.tokenType[ " > " ]       = t.OPERATOR;
-    this.tokenType[ " <= " ]      = t.OPERATOR;
-    this.tokenType[ " >= " ]      = t.OPERATOR;
-    this.tokenType[ " == " ]      = t.OPERATOR;
-    this.tokenType[ " != " ]      = t.OPERATOR;
-    this.tokenType[ " === " ]     = t.OPERATOR;
-    this.tokenType[ " !== " ]     = t.OPERATOR;
-    this.tokenType[ " + " ]       = t.OPERATOR;
-    this.tokenType[ " - " ]       = t.OPERATOR;
-    this.tokenType[ " * " ]       = t.OPERATOR;
-    this.tokenType[ " % " ]       = t.OPERATOR;
-    this.tokenType[ " ++ " ]      = t.OPERATOR;
-    this.tokenType[ " + " ]       = t.OPERATOR;
-    this.tokenType[ " -- " ]      = t.OPERATOR;
-    this.tokenType[ " << " ]      = t.OPERATOR;
-    this.tokenType[ " >> " ]      = t.OPERATOR;
-    this.tokenType[ " >>> " ]     = t.OPERATOR;
-    this.tokenType[ " & " ]       = t.OPERATOR;
-    this.tokenType[ " | " ]       = t.OPERATOR;
-    this.tokenType[ " ^ " ]       = t.OPERATOR;
-    this.tokenType[ " ! " ]       = t.OPERATOR;
-    this.tokenType[ " ~ " ]       = t.OPERATOR;
-    this.tokenType[ " && " ]      = t.OPERATOR;
-    this.tokenType[ " || " ]      = t.OPERATOR;
-    this.tokenType[ " ? " ]       = t.OPERATOR;
-    this.tokenType[ " : " ]       = t.OPERATOR;
-    this.tokenType[ " = " ]       = t.OPERATOR;
-    this.tokenType[ " += " ]      = t.OPERATOR;
-    this.tokenType[ " -= " ]      = t.OPERATOR;
-    this.tokenType[ " *= " ]      = t.OPERATOR;
-    this.tokenType[ " %= " ]      = t.OPERATOR;
-    this.tokenType[ " <<= " ]     = t.OPERATOR;
-    this.tokenType[ " >>= " ]     = t.OPERATOR;
-    this.tokenType[ " >>>= " ]    = t.OPERATOR;
-    this.tokenType[ " &= " ]      = t.OPERATOR;
-    this.tokenType[ " |= " ]      = t.OPERATOR;
-    this.tokenType[ " ^= " ]      = t.OPERATOR;
-    this.tokenType[ " / " ]       = t.OPERATOR;
-    this.tokenType[ " /= " ]      = t.OPERATOR;
+    this.tokenType[" break "]     = t.RESERVED_WORD;
+    this.tokenType[" else "]      = t.RESERVED_WORD;
+    this.tokenType[" new "]     = t.RESERVED_WORD;
+    this.tokenType[" var "]     = t.RESERVED_WORD;
+    this.tokenType[" case "]      = t.RESERVED_WORD;
+    this.tokenType[" finally "]   = t.RESERVED_WORD;
+    this.tokenType[" return "]    = t.RESERVED_WORD;
+    this.tokenType[" void "]      = t.RESERVED_WORD;
+    this.tokenType[" catch "]     = t.RESERVED_WORD;
+    this.tokenType[" for "]     = t.RESERVED_WORD;
+    this.tokenType[" switch "]    = t.RESERVED_WORD;
+    this.tokenType[" while "]     = t.RESERVED_WORD;
+    this.tokenType[" continue "]    = t.RESERVED_WORD;
+    this.tokenType[" function "]    = t.RESERVED_WORD;
+    this.tokenType[" this "]      = t.RESERVED_WORD;
+    this.tokenType[" with "]      = t.RESERVED_WORD;
+    this.tokenType[" default "]   = t.RESERVED_WORD;
+    this.tokenType[" if "]      = t.RESERVED_WORD;
+    this.tokenType[" throw "]     = t.RESERVED_WORD;
+    this.tokenType[" delete "]    = t.RESERVED_WORD;
+    this.tokenType[" in "]      = t.RESERVED_WORD;
+    this.tokenType[" try "]     = t.RESERVED_WORD;
+    this.tokenType[" do "]      = t.RESERVED_WORD;
+    this.tokenType[" instanceof "]  = t.RESERVED_WORD;
+    this.tokenType[" typeof "]    = t.RESERVED_WORD;
+    this.tokenType[" abstract "]    = t.RESERVED_WORD;
+    this.tokenType[" enum "]      = t.RESERVED_WORD;
+    this.tokenType[" int "]     = t.RESERVED_WORD;
+    this.tokenType[" short "]     = t.RESERVED_WORD;
+    this.tokenType[" boolean "]   = t.RESERVED_WORD;
+    this.tokenType[" export "]    = t.RESERVED_WORD;
+    this.tokenType[" interface "]   = t.RESERVED_WORD;
+    this.tokenType[" static "]    = t.RESERVED_WORD;
+    this.tokenType[" byte "]      = t.RESERVED_WORD;
+    this.tokenType[" extends "]   = t.RESERVED_WORD;
+    this.tokenType[" long "]      = t.RESERVED_WORD;
+    this.tokenType[" super "]     = t.RESERVED_WORD;
+    this.tokenType[" char "]      = t.RESERVED_WORD;
+    this.tokenType[" final "]     = t.RESERVED_WORD;
+    this.tokenType[" native "]    = t.RESERVED_WORD;
+    this.tokenType[" synchronized "]  = t.RESERVED_WORD;
+    this.tokenType[" class "]     = t.RESERVED_WORD;
+    this.tokenType[" float "]     = t.RESERVED_WORD;
+    this.tokenType[" package "]   = t.RESERVED_WORD;
+    this.tokenType[" throws "]    = t.RESERVED_WORD;
+    this.tokenType[" const "]     = t.RESERVED_WORD;
+    this.tokenType[" goto "]      = t.RESERVED_WORD;
+    this.tokenType[" private "]   = t.RESERVED_WORD;
+    this.tokenType[" transient "]   = t.RESERVED_WORD;
+    this.tokenType[" debugger "]= t.RESERVED_WORD;
+    this.tokenType[" implements "]= t.RESERVED_WORD;
+    this.tokenType[" protected "] = t.RESERVED_WORD;
+    this.tokenType[" volatile "]= t.RESERVED_WORD;
+    this.tokenType[" double "]  = t.RESERVED_WORD;
+    this.tokenType[" import "]  = t.RESERVED_WORD;
+    this.tokenType[" public "]  = t.RESERVED_WORD;
+    this.tokenType[" null "]    = t.NULL_LITERAL;
+    this.tokenType[" undefined "] = t.UNDEFINED_LITERAL;
+    this.tokenType[" true "]    = t.BOOLEAN_LITERAL;
+    this.tokenType[" false "]   = t.BOOLEAN_LITERAL;
+    this.tokenType[" NaN "]     = t.NAN_LITERAL;
+    this.tokenType[" Infinity "]= t.INFINITY_LITERAL;
+    this.tokenType[" { "]       = t.PUNCTUATOR;
+    this.tokenType[" } "]       = t.PUNCTUATOR;
+    this.tokenType[" ("]       = t.PUNCTUATOR;
+    this.tokenType[") "]       = t.PUNCTUATOR;
+    this.tokenType[" ["]       = t.PUNCTUATOR;
+    this.tokenType["] "]       = t.PUNCTUATOR;
+    this.tokenType[" ; "]       = t.PUNCTUATOR;
+    this.tokenType[" . "]       = t.PUNCTUATOR;
+    this.tokenType[" , "]       = t.PUNCTUATOR;
+    this.tokenType[" < "]       = t.OPERATOR;
+    this.tokenType[" > "]       = t.OPERATOR;
+    this.tokenType[" <= "]      = t.OPERATOR;
+    this.tokenType[" >= "]      = t.OPERATOR;
+    this.tokenType[" == "]      = t.OPERATOR;
+    this.tokenType[" != "]      = t.OPERATOR;
+    this.tokenType[" === "]     = t.OPERATOR;
+    this.tokenType[" !== "]     = t.OPERATOR;
+    this.tokenType[" + "]       = t.OPERATOR;
+    this.tokenType[" - "]       = t.OPERATOR;
+    this.tokenType[" * "]       = t.OPERATOR;
+    this.tokenType[" % "]       = t.OPERATOR;
+    this.tokenType[" ++ "]      = t.OPERATOR;
+    this.tokenType[" + "]       = t.OPERATOR;
+    this.tokenType[" -- "]      = t.OPERATOR;
+    this.tokenType[" << "]      = t.OPERATOR;
+    this.tokenType[" >> "]      = t.OPERATOR;
+    this.tokenType[" >>> "]     = t.OPERATOR;
+    this.tokenType[" & "]       = t.OPERATOR;
+    this.tokenType[" | "]       = t.OPERATOR;
+    this.tokenType[" ^ "]       = t.OPERATOR;
+    this.tokenType[" ! "]       = t.OPERATOR;
+    this.tokenType[" ~ "]       = t.OPERATOR;
+    this.tokenType[" && "]      = t.OPERATOR;
+    this.tokenType[" || "]      = t.OPERATOR;
+    this.tokenType[" ? "]       = t.OPERATOR;
+    this.tokenType[" : "]       = t.OPERATOR;
+    this.tokenType[" = "]       = t.OPERATOR;
+    this.tokenType[" += "]      = t.OPERATOR;
+    this.tokenType[" -= "]      = t.OPERATOR;
+    this.tokenType[" *= "]      = t.OPERATOR;
+    this.tokenType[" %= "]      = t.OPERATOR;
+    this.tokenType[" <<= "]     = t.OPERATOR;
+    this.tokenType[" >>= "]     = t.OPERATOR;
+    this.tokenType[" >>>= "]    = t.OPERATOR;
+    this.tokenType[" &= "]      = t.OPERATOR;
+    this.tokenType[" |= "]      = t.OPERATOR;
+    this.tokenType[" ^= "]      = t.OPERATOR;
+    this.tokenType[" / "]       = t.OPERATOR;
+    this.tokenType[" /= "]      = t.OPERATOR;
     
     this.stringEscapeMap = [];
-    this.stringEscapeMap[ "'" ]     = "'";
-    this.stringEscapeMap[ '"' ]     = '"';
-    this.stringEscapeMap[ "\\" ]    = "\\";
-    this.stringEscapeMap[ "b" ]     = "\b";
-    this.stringEscapeMap[ "f" ]     = "\f";
-    this.stringEscapeMap[ "n" ]     = "\n";
-    this.stringEscapeMap[ "r" ]     = "\r";
-    this.stringEscapeMap[ "t" ]     = "\t";
-    this.stringEscapeMap[ "v" ]     = "\v";
+    this.stringEscapeMap["'"]     = "'";
+    this.stringEscapeMap['"']     = '"';
+    this.stringEscapeMap["\\"]    = "\\";
+    this.stringEscapeMap["b"]     = "\b";
+    this.stringEscapeMap["f"]     = "\f";
+    this.stringEscapeMap["n"]     = "\n";
+    this.stringEscapeMap["r"]     = "\r";
+    this.stringEscapeMap["t"]     = "\t";
+    this.stringEscapeMap["v"]     = "\v";
     
     this.digitType = [];
-    this.digitType[ "0" ]       = "9";
-    this.digitType[ "1" ]       = "9";
-    this.digitType[ "2" ]       = "9";
-    this.digitType[ "3" ]       = "9";
-    this.digitType[ "4" ]       = "9";
-    this.digitType[ "5" ]       = "9";
-    this.digitType[ "6" ]       = "9";
-    this.digitType[ "7" ]       = "9";
-    this.digitType[ "8" ]       = "9";
-    this.digitType[ "9" ]       = "9";
-    this.digitType[ "A" ]       = "F";
-    this.digitType[ "B" ]       = "F";
-    this.digitType[ "C" ]       = "F";
-    this.digitType[ "D" ]       = "F";
-    this.digitType[ "E" ]       = "F";
-    this.digitType[ "F" ]       = "F";
-    this.digitType[ "a" ]       = "F";
-    this.digitType[ "b" ]       = "F";
-    this.digitType[ "c" ]       = "F";
-    this.digitType[ "d" ]       = "F";
-    this.digitType[ "e" ]       = "F";
-    this.digitType[ "f" ]       = "F";
-    this.digitType[ "." ]       = ".";
-    this.digitType[ "+" ]       = "+";
-    this.digitType[ "-" ]       = "-";
-    this.digitType[ "E" ]       = "E";
-    this.digitType[ "e" ]       = "E";
-    this.digitType[ "x" ]       = "x";
+    this.digitType["0"]       = "9";
+    this.digitType["1"]       = "9";
+    this.digitType["2"]       = "9";
+    this.digitType["3"]       = "9";
+    this.digitType["4"]       = "9";
+    this.digitType["5"]       = "9";
+    this.digitType["6"]       = "9";
+    this.digitType["7"]       = "9";
+    this.digitType["8"]       = "9";
+    this.digitType["9"]       = "9";
+    this.digitType["A"]       = "F";
+    this.digitType["B"]       = "F";
+    this.digitType["C"]       = "F";
+    this.digitType["D"]       = "F";
+    this.digitType["E"]       = "F";
+    this.digitType["F"]       = "F";
+    this.digitType["a"]       = "F";
+    this.digitType["b"]       = "F";
+    this.digitType["c"]       = "F";
+    this.digitType["d"]       = "F";
+    this.digitType["e"]       = "F";
+    this.digitType["f"]       = "F";
+    this.digitType["."]       = ".";
+    this.digitType["+"]       = "+";
+    this.digitType["-"]       = "-";
+    this.digitType["E"]       = "E";
+    this.digitType["e"]       = "E";
+    this.digitType["x"]       = "x";
   },
   
   // peeks ahead in the token stream by a certain number of tokens without changing the
   // current token index
-  peekToken: function( ahead ) {
-    if( ahead == null ) {
+  peekToken: function(ahead) {
+    if(ahead == null) {
       ahead = 0;
     }
     
     var tokenIndex = ahead + this.getTokenIndex;
     
-    while( tokenIndex >= this.parseTokenIndex ) {
+    while(tokenIndex >= this.parseTokenIndex) {
       this.tokens[this.parseTokenIndex] = this.parseToken();
       this.parseTokenIndex++;
     }
@@ -306,7 +318,7 @@ DJS.Lexer = Class.create(DJS.Base, {
   
   // gets the next token and moves one step forward in the stream
   getToken: function() {
-    var token = this.peekToken( 0 );
+    var token = this.peekToken(0);
     this.getTokenIndex++;
     return token;
   },
@@ -323,16 +335,16 @@ DJS.Lexer = Class.create(DJS.Base, {
     var c = " ";
     var nc;
     
-    while( this.charType[c] == DJS.Lexer.TYPE_WHITESPACE ) {
+    while(this.charType[c] == DJS.Lexer.TYPE_WHITESPACE) {
       
       c = this.getChar();
       
-      if( c == "" ) {
-        return new DJS.Token( DJS.Token.EOF, "", this.parseCharIndex - 1, this.parseCharIndex, this.lineCharIndex, this.lineNumber );
+      if(c == "") {
+        return new DJS.Token(DJS.Token.EOF, "", this.parseCharIndex - 1, this.parseCharIndex, this.lineCharIndex, this.lineNumber);
       }
-      else if( c == "\r" ) {
+      else if(c == "\r") {
         c = this.getChar();
-        if( c != "\n" ) this.ungetChar();
+        if(c != "\n") this.ungetChar();
         this.lineNumber++;
         this.lineCharIndex = 0;
       }
@@ -343,15 +355,15 @@ DJS.Lexer = Class.create(DJS.Base, {
       
       // SCAN PAST COMMENTS
     
-      if( c == "/" ) {
+      if(c == "/") {
       
         var nc = this.getChar();
       
-        if( nc == "*" ) {
-          this.getComment( "/*" );
+        if(nc == "*") {
+          this.getComment("/*");
           c = this.getChar();
-        } else if( nc == "/" ) {
-          this.getComment( "//" );
+        } else if(nc == "/") {
+          this.getComment("//");
           c = this.getChar();
         } else {
           this.ungetChar();
@@ -365,11 +377,11 @@ DJS.Lexer = Class.create(DJS.Base, {
     
     // CHECK FOR A NUMER THAT STARTS WITH A DECIMAL
     
-    if( c == "." ) {
+    if(c == ".") {
       
       nc = this.getChar();
       
-      if( this.charType[nc] == DJS.Lexer.TYPE_DIGIT ) {
+      if(this.charType[nc] == DJS.Lexer.TYPE_DIGIT) {
         c += nc;
         type = DJS.Lexer.TYPE_DIGIT;
       } else {
@@ -377,73 +389,79 @@ DJS.Lexer = Class.create(DJS.Base, {
       }
     }
     
-    if( c == "$" ) {
+    if(c == "$") {
       type = "_";
     }
     
-    switch( type ) {
+    switch(type) {
       
       case DJS.Lexer.TYPE_LETTER:
-      case "_":           token = this.getReservedWordOrIdentifier( c );
-                      break;
+      case "_":           
+        token = this.getReservedWordOrIdentifier(c);
+        break;
       
-      case DJS.Lexer.TYPE_DIGIT:    token = this.getNumber( c );
-                      break;
+      case DJS.Lexer.TYPE_DIGIT:    
+        token = this.getNumber(c);
+        break;
       
       case "\"":
-      case "'":           token = this.getString( type );
-                      break;
+      case "'":           
+        token = this.getString(type);
+        break;
                       
-      case DJS.Lexer.TYPE_PUNCTUATION:token = this.getPunctuationOrOperator( c );
-                      break;
+      case DJS.Lexer.TYPE_PUNCTUATION:
+        token = this.getPunctuationOrOperator(c);
+        break;
       
-      default:            token = new DJS.Token( DJS.Token.UNKNOWN, c, this.startOfParse, this.parseCharIndex - c.length, this.lineCharIndex - c.length, this.lineNumber );
+      default:            
+        token = new DJS.Token(DJS.Token.UNKNOWN, c, this.startOfParse, this.parseCharIndex - c.length, this.lineCharIndex - c.length, this.lineNumber);
     }
     
     return token;
   },
   
-  getChar: function( escapeMap ) {
-    if( this.parseCharIndex == this.source.length ) {
+  getChar: function(escapeMap) {
+    if(this.parseCharIndex == this.source.length) {
       this.parseCharIndex++;
       this.lineCharIndex++;
       return ""; // EOF
     }
     
-    if( this.parseCharIndex > this.source.length ) {
-      this.trace( "THROWING END OF FILE EXCEPTION" );
+    if(this.parseCharIndex > this.source.length) {
+      this.trace("THROWING END OF FILE EXCEPTION");
       throw {type: "pastEOF", sender: this};
     }
     
-    var c = this.source.charAt( this.parseCharIndex );
+    var c = this.source.charAt(this.parseCharIndex);
     var cls = DJS.Lexer;
     
-    if( c == "\\" ) {
+    if(c == "\\") {
       
-      var nc = this.source.charAt( this.parseCharIndex + 1 );
+      var nc = this.source.charAt(this.parseCharIndex + 1);
 
-      if( nc == "u" &&  cls.HEX_DIGITS.indexOf( this.source.charAt( this.parseCharIndex + 2 ) ) > -1 &&
-                cls.HEX_DIGITS.indexOf( this.source.charAt( this.parseCharIndex + 3 ) ) > -1 &&
-                cls.HEX_DIGITS.indexOf( this.source.charAt( this.parseCharIndex + 4 ) ) > -1 &&
-                cls.HEX_DIGITS.indexOf( this.source.charAt( this.parseCharIndex + 5 ) ) > -1 )
+      if(nc == "u" &&  cls.HEX_DIGITS.indexOf(this.source.charAt(this.parseCharIndex + 2)) > -1 &&
+                cls.HEX_DIGITS.indexOf(this.source.charAt(this.parseCharIndex + 3)) > -1 &&
+                cls.HEX_DIGITS.indexOf(this.source.charAt(this.parseCharIndex + 4)) > -1 &&
+                cls.HEX_DIGITS.indexOf(this.source.charAt(this.parseCharIndex + 5)) > -1)
       {
-        c = String.fromCharCode( parseInt( this.source.substr( this.parseCharIndex + 2, 4 ) ) );
-        this.source = this.source.substring( 0, this.parseCharIndex ) + c + this.source.substring( this.parseCharIndex + 6 );
+        c = String.fromCharCode(parseInt(this.source.substr(this.parseCharIndex + 2, 4)));
+        this.source = this.source.substring(0, this.parseCharIndex) + c + this.source.substring(this.parseCharIndex + 6);
         this.parseCharIndex++;
         this.lineCharIndex++;
-      } else if( nc == "x" && cls.HEX_DIGITS.indexOf( this.source.charAt( this.parseCharIndex + 2 ) ) > -1 &&
-                  cls.HEX_DIGITS.indexOf( this.source.charAt( this.parseCharIndex + 3 ) ) > -1 )
+      } 
+      else if(nc == "x" && cls.HEX_DIGITS.indexOf(this.source.charAt(this.parseCharIndex + 2)) > -1 &&
+        cls.HEX_DIGITS.indexOf(this.source.charAt(this.parseCharIndex + 3)) > -1)
       {
-        c = String.fromCharCode( parseInt( this.source.substr( this.parseCharIndex + 2, 2 ) ) );
-        this.source = this.source.substring( 0, this.parseCharIndex ) + c + this.source.substring( this.parseCharIndex + 4 );
+        c = String.fromCharCode(parseInt(this.source.substr(this.parseCharIndex + 2, 2)));
+        this.source = this.source.substring(0, this.parseCharIndex) + c + this.source.substring(this.parseCharIndex + 4);
         this.parseCharIndex++;
         this.lineCharIndex++;
-      } else if( escapeMap != null ) {
+      } else if(escapeMap != null) {
         
         nc = escapeMap[nc];
         
-        if( nc != null ) {
-          this.source = this.source.substring( 0, this.parseCharIndex ) + nc + this.source.substring( this.parseCharIndex + 2 );
+        if(nc != null) {
+          this.source = this.source.substring(0, this.parseCharIndex) + nc + this.source.substring(this.parseCharIndex + 2);
         }
       }
     }
@@ -454,32 +472,32 @@ DJS.Lexer = Class.create(DJS.Base, {
   },
   
   ungetChar: function() {
-    if( this.parseCharIndex < 1 ) {
-      throw { msg: "ungetChar(): invalid operation." };
+    if(this.parseCharIndex < 1) {
+      throw {msg: "ungetChar(): invalid operation."};
     }
     
     this.parseCharIndex--;
     this.lineCharIndex--;
   },
   
-  getComment: function( delim ) {
+  getComment: function(delim) {
     var startOfComment = this.parseTokenIndex - 2;
     
-    if( delim == "/*" ) {
+    if(delim == "/*") {
       
       var c1 = this.getChar();
       var c2 = this.getChar();
       
-      while( c1 != "*" || c2 != "/" ) {
+      while(c1 != "*" || c2 != "/") {
         c1 = c2;
         c2 = this.getChar();
       }
       
-    } else if( delim == "//" ) {
+    } else if(delim == "//") {
       
       var c = this.getChar();
       
-      while( c != "\r" && c != "\n" ) {
+      while(c != "\r" && c != "\n") {
         c = this.getChar();
       }
       
@@ -487,14 +505,14 @@ DJS.Lexer = Class.create(DJS.Base, {
       throw { msg: "getComment(): invalid delimiter '" + delim + "'" };
     }
     
-    return this.source.substring( startOfComment, this.parseTokenIndex );
+    return this.source.substring(startOfComment, this.parseTokenIndex);
   },
   
-  getReservedWordOrIdentifier: function( token ) {
+  getReservedWordOrIdentifier: function(token) {
     var c = this.getChar();
     var t = this.charType[c];
     
-    while( t == DJS.Lexer.TYPE_LETTER || t == "_" || t == DJS.Lexer.TYPE_DIGIT || t == "$" ) {
+    while(t == DJS.Lexer.TYPE_LETTER || t == "_" || t == DJS.Lexer.TYPE_DIGIT || t == "$") {
       
       token += c;
       c = this.getChar();
@@ -504,14 +522,14 @@ DJS.Lexer = Class.create(DJS.Base, {
     this.ungetChar();
     var type = this.tokenType[" " + token + " "];
     
-    if( type == null ) {
+    if(type == null) {
       type = DJS.Token.IDENTIFIER;
     }
     
-    return new DJS.Token( type, token, this.startOfParse, this.parseCharIndex - token.length, this.lineCharIndex - token.length, this.lineNumber );
+    return new DJS.Token(type, token, this.startOfParse, this.parseCharIndex - token.length, this.lineCharIndex - token.length, this.lineNumber);
   },
   
-  getNumber: function( token ) {
+  getNumber: function(token) {
     var c = token;
     token = "";
     var type = "9";
@@ -519,31 +537,34 @@ DJS.Lexer = Class.create(DJS.Base, {
     var pattern = "";
     var hex = false;
     
-    while( type != null ) {
+    while(type != null) {
       
       token += c;
       
-      switch( type ) {
+      switch(type) {
         
-        case "9":   if( hex ) {
-                  type = "F";
-                }
+        case "9":   
+          if(hex) {
+            type = "F";
+          }
                 
-        case "F":   if( type != lastType ) {
-                  pattern += type;
-                }
-                
-                break;
+        case "F":   
+          if(type != lastType) {
+            pattern += type;
+          }
+          break;
         
         case ".":
         case "+":
         case "-":   
-        case "E":   pattern += type;
-                break;
+        case "E":   
+          pattern += type;
+          break;
                 
-        case "x":   hex = true;
-                pattern += "x";
-                break;
+        case "x":   
+          hex = true;
+          pattern += "x";
+          break;
       }
       
       c = this.getChar();
@@ -553,7 +574,7 @@ DJS.Lexer = Class.create(DJS.Base, {
     
     this.ungetChar();
     
-    switch( pattern ) {
+    switch(pattern) {
       
       case ".9":
       case ".9E9":
@@ -570,42 +591,42 @@ DJS.Lexer = Class.create(DJS.Base, {
       case "9E+9":
       case "9E-9":
       case "9E9":     
-        return new DJS.Token( DJS.Token.FLOAT_LITERAL, token, this.startOfParse, this.parseCharIndex - token.length, this.lineCharIndex - token.length, this.lineNumber );
+        return new DJS.Token(DJS.Token.FLOAT_LITERAL, token, this.startOfParse, this.parseCharIndex - token.length, this.lineCharIndex - token.length, this.lineNumber);
       
       case "9":
-        return new DJS.Token( DJS.Token.FLOAT_LITERAL, token, this.startOfParse, this.parseCharIndex - token.length, this.lineCharIndex - token.length, this.lineNumber );
+        return new DJS.Token(DJS.Token.FLOAT_LITERAL, token, this.startOfParse, this.parseCharIndex - token.length, this.lineCharIndex - token.length, this.lineNumber);
                 
       case "9xF":
-        if( token.charAt( 0 ) == "0" ) {
-          return new DJS.Token( DJS.Token.INTEGER_LITERAL, token, this.startOfParse, this.parseCharIndex - token.length, this.lineCharIndex - token.length, this.lineNumber );
+        if(token.charAt(0) == "0") {
+          return new DJS.Token(DJS.Token.INTEGER_LITERAL, token, this.startOfParse, this.parseCharIndex - token.length, this.lineCharIndex - token.length, this.lineNumber);
         }
     }
     
     
-    throw { type: "notexpecting", token: new DJS.Token( DJS.Token.UNKNOWN, token, this.startOfParse, this.parseCharIndex - token.length, this.lineCharIndex - token.length, this.lineNumber ), sender: this };
+    throw { type: "notexpecting", token: new DJS.Token(DJS.Token.UNKNOWN, token, this.startOfParse, this.parseCharIndex - token.length, this.lineCharIndex - token.length, this.lineNumber), sender: this };
   },
   
-  getString: function( delim ) {
-    if( delim != "\"" && delim != "'" ) {
+  getString: function(delim) {
+    if(delim != "\"" && delim != "'") {
       throw { msg: "getString(): invalid delimiter: " + delim };
     }     
 
     var chars = [];
-    var c = this.getChar( this.stringEscapeMap );
+    var c = this.getChar(this.stringEscapeMap);
     
-    while( c != delim ) {
-      chars.push( c );
-      c = this.getChar( this.stringEscapeMap );
+    while(c != delim) {
+      chars.push(c);
+      c = this.getChar(this.stringEscapeMap);
     }
     
-    return new DJS.Token( DJS.Token.STRING_LITERAL, chars.join( "" ), this.startOfParse, this.parseCharIndex - chars.length, this.lineCharIndex - chars.length, this.lineNumber );
+    return new DJS.Token(DJS.Token.STRING_LITERAL, chars.join(""), this.startOfParse, this.parseCharIndex - chars.length, this.lineCharIndex - chars.length, this.lineNumber);
   },
   
-  getPunctuationOrOperator: function( token ) {
+  getPunctuationOrOperator: function(token) {
     var c = this.getChar();
     var t = this.charType[c];
     
-    while( t == DJS.Lexer.TYPE_PUNCTUATION && this.tokenType[" " + token + c + " "] != null ) {
+    while (t == DJS.Lexer.TYPE_PUNCTUATION && this.tokenType[" " + token + c + " "] != null) {
       
       token += c;
       c = this.getChar();
@@ -615,59 +636,59 @@ DJS.Lexer = Class.create(DJS.Base, {
     this.ungetChar();
     var type = this.tokenType[" " + token + " "];
     
-    if( type == null ) {
+    if(type == null) {
       type = DJS.Token.UNKNOWN;
     }
     
     return new DJS.Token(type, token, this.startOfParse, this.parseCharIndex - token.length, this.lineCharIndex - token.length, this.lineNumber)
   },
   
-  getPositionDescription: function( token ) {
+  getPositionDescription: function(token) {
     return "";
   },
   
-  getSource: function( ele ) {
-    return this.source.substring( ele.startToken.charStart, ele.endToken.charStart + ele.endToken.value.toString().length );
+  getSource: function(ele) {
+    return this.source.substring(ele.startToken.charStart, ele.endToken.charStart + ele.endToken.value.toString().length);
   },
   
   /** Initialize the character types. */
   
   initCharType: function()
   {
-    this.generateCharType( DJS.Unicode.WHITESPACE,    DJS.Lexer.TYPE_WHITESPACE );
-    this.generateCharType( DJS.Unicode.CAPITAL_LETTERS, DJS.Lexer.TYPE_LETTER );
-    this.generateCharType( DJS.Unicode.SMALL_LETTERS, DJS.Lexer.TYPE_LETTER );
-    this.generateCharType( DJS.Unicode.DIGITS,      DJS.Lexer.TYPE_DIGIT );
-    this.generateCharType( DJS.Unicode.PUNCTUATION,   DJS.Lexer.TYPE_PUNCTUATION );
+    this.generateCharType(DJS.Unicode.WHITESPACE,    DJS.Lexer.TYPE_WHITESPACE);
+    this.generateCharType(DJS.Unicode.CAPITAL_LETTERS, DJS.Lexer.TYPE_LETTER);
+    this.generateCharType(DJS.Unicode.SMALL_LETTERS, DJS.Lexer.TYPE_LETTER);
+    this.generateCharType(DJS.Unicode.DIGITS,      DJS.Lexer.TYPE_DIGIT);
+    this.generateCharType(DJS.Unicode.PUNCTUATION,   DJS.Lexer.TYPE_PUNCTUATION);
     
-    if( this.delimiters != null ) {
-      this.generateDelimeterType( this.delimiters );
+    if(this.delimiters != null) {
+      this.generateDelimeterType(this.delimiters);
     }
   },
   
   /** Generate the charType table for a class of characters. */
   
-  generateCharType: function( chars, type ) {
-    chars = chars.split( "" );
+  generateCharType: function(chars, type) {
+    chars = chars.split("");
       
-    for( var i in chars ) {
-      this.charType[ chars[i] ] = type;
+    for(var i in chars) {
+      this.charType[chars[i]] = type;
     }
   },
   
   /** Update the charType table for delimeters. */
   
-  generateDelimeterType: function( chars ) {
-    chars = chars.split( "" );
+  generateDelimeterType: function(chars) {
+    chars = chars.split("");
       
-    for( var i in chars ) {
+    for(var i in chars) {
       
       var d = chars[i];
       this.charType[d] = d;
     }
   }
 });
-Object.extend( DJS.Lexer, DJS.LexerConstants );
+Object.extend(DJS.Lexer, DJS.LexerConstants);
 
 // Unicode Characters
 DJS.Unicode = {
