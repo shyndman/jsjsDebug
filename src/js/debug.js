@@ -5,8 +5,8 @@
 DJS.StackFrame = Class.create(DJS.Base, {
   initialize: function( thisPath ) {
     this.thisPath = thisPath;
-    this.blockStack = [ window, document, null, { 'window': window, 'document': document }, {} ];
-    this.setThisObject( this.evalPath( thisPath ) );
+    this.blockStack = [window, document, null, {'window': window, 'document': document}, {}];
+    this.setThisObject(this.evalPath(thisPath));
     this.isInLoop = false;
     this.isInSwitch = false;
     
@@ -17,13 +17,13 @@ DJS.StackFrame = Class.create(DJS.Base, {
   },
   
   // setting "this"
-  setThisObject: function( thisObj ) {
+  setThisObject: function(thisObj) {
     this.blockStack[2] = thisObj;
     this.blockStack[3]["this"] = thisObj;
   },
   
   // pushing and popping blocks
-  push: function( scope ) {
+  push: function(scope) {
     this.blockStack.push( scope ? scope : {} );
   },
   
@@ -37,10 +37,10 @@ DJS.StackFrame = Class.create(DJS.Base, {
     return this.blockStack[this.blockStack.length - 1];
   },
   
-  setVariable: function( target, name, value ) {
+  setVariable: function(target, name, value) {
     var old = target[name];
     target[name] = value;
-    this.variableChanged( target, name, old, value );
+    this.variableChanged(target, name, old, value);
   },
   
   setLocalVariable: function( name, value ) {

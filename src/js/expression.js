@@ -50,7 +50,7 @@ DJS.Expression = Class.create( DJS.Base, {
     var expr;
     if( idx == -1 || context.isNodeComplete( this.list[idx] ) ) {
       if( idx != -1 ) {
-        state.push( context.getNodeState( this.list[idx] ).value );
+        state.value.push( context.getNodeState( this.list[idx] ).value );
         this.list[idx].afterExecute( context );
       }
       context.addNodeState( this, 'idx', ++idx );

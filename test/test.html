@@ -23,12 +23,17 @@
 <body>
 	<div id="foo" style="margin-left: 40px;">this is a test</div>
 	<script type="text/javascript">
-		var script = new DJS.Script( 'var test = new Element("div", {className: "shazbot"}); $("foo").insert(test);');
+	  var alertSomeStrings = function() {
+	    var test = "snazzy! " + 1983;
+	    window.alert(test.toUpperCase());
+	  };
+	                              
+		var script = new DJS.Script(alertSomeStrings.debuggable());
 		script.parse();
 		var ctx = new DJS.StackFrame( 'document' );
 		
 		script.beforeExecute( ctx );
-		while( !script.doStep( ctx, DJS.StepOp.IN ) );
+		while(!script.doStep( ctx, DJS.StepOp.IN));
 		script.afterExecute( ctx );
 	</script>
 </body>

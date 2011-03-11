@@ -22,3 +22,16 @@ DJS.Base = Class.create({
   }
 });
 DJS.Base.count = 0;
+
+//
+// Utils
+//
+
+/**  
+ * Since Prototype decorates prototypes, might as well join the party.
+ * Generally not recommended.
+ */
+Function.prototype.debuggable = function() {
+  var source = this.toString();
+  return source.substring(13, source.length - 1);
+};
