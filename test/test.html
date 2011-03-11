@@ -1,40 +1,34 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
+<!doctype html>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 
-	<title>test</title>
-	<script type="text/javascript" src="../src/js/prototype-1.6.js"></script>
-	<script type="text/javascript" src="../src/js/core.js"></script>
-	<script type="text/javascript" src="../src/js/tokens.js"></script>
-	<script type="text/javascript" src="../src/js/except.js"></script>
-	<script type="text/javascript" src="../src/js/script.js"></script>
-	<script type="text/javascript" src="../src/js/expression.js"></script>
-	<script type="text/javascript" src="../src/js/debug.js"></script>
-	<style type="text/css">
-		div.shazbot {
-			width: 100px; height: 100px;
-			background-color: #FFFF00;
-		}
-	</style>
+  <title>test</title>
+  <script type="text/javascript" src="../src/js/prototype-1.6.js"></script>
+  <script type="text/javascript" src="../src/js/core.js"></script>
+  <script type="text/javascript" src="../src/js/tokens.js"></script>
+  <script type="text/javascript" src="../src/js/except.js"></script>
+  <script type="text/javascript" src="../src/js/script.js"></script>
+  <script type="text/javascript" src="../src/js/expression.js"></script>
+  <script type="text/javascript" src="../src/js/debug.js"></script>
 </head>
 <body>
-	<div id="foo" style="margin-left: 40px;">this is a test</div>
-	<script type="text/javascript">
-	  var alertSomeStrings = function() {
-	    var test = "snazzy! " + 1983;
-	    window.alert(test.toUpperCase());
-	  };
-	                              
-		var script = new DJS.Script(alertSomeStrings.debuggable());
-		script.parse();
-		var ctx = new DJS.StackFrame( 'document' );
-		
-		script.beforeExecute( ctx );
-		while(!script.doStep( ctx, DJS.StepOp.IN));
-		script.afterExecute( ctx );
-	</script>
+  <script type="text/javascript">
+    var popupSeveralAlerts = function() {
+      
+      for (var i = 0; i < 10; i++) {
+        var div = document.createElement('div');
+        alert("we have reached iteration " + i);
+      }
+    };
+                                
+    var script = new DJS.Script(popupSeveralAlerts.asEntryPoint());
+    script.parse();
+    var ctx = new DJS.StackFrame( 'document' );
+    
+    script.beforeExecute( ctx );
+    while(!script.doStep( ctx, DJS.StepOp.IN));
+    script.afterExecute( ctx );
+  </script>
 </body>
 </html>

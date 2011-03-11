@@ -31,7 +31,7 @@ DJS.Base.count = 0;
  * Since Prototype decorates prototypes, might as well join the party.
  * Generally not recommended.
  */
-Function.prototype.debuggable = function() {
+Function.prototype.asEntryPoint = function() {
   var source = this.toString();
-  return source.substring(13, source.length - 1);
+  return source.substring(13, source.length - 3);
 };
